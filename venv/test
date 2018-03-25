@@ -1,0 +1,24 @@
+import requests
+import smtplib
+from bs4 import BeautifulSoup
+from email.message import EmailMessage
+from email.mime.text import MIMEText
+
+url = 'https://www.chita.ru/horoscope/'
+r = requests.get(url)
+
+soup = BeautifulSoup(r.text, "html.parser")
+goroList = soup.find_all('div', {'class': 'cr_mixed'})
+
+msg = EmailMessage()
+msg['Subject'] = 'The contents'
+msg['From'] = 'dariyogienko@gmail.com'
+msg['To'] = 'd.ogienko@ticketland.ru'
+
+text = MIMEText(str(goroList[9]), 'html')
+msg.set_content(text)
+
+s = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+s.login('dariyogienko@gmail.com', 'Dasha190194')
+s.send_message(msg)
+s.quit()
